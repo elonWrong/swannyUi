@@ -4,7 +4,9 @@ using [ExpressJS](https://github.com/expressjs/express)
 
 Developed as a proof of concept for my final year project. 
 
-originally based on [coreOllama](https://github.com/chanulee/coreOllama)
+Try it out Today at [SwannyAi!](http://swannyapi.elonwong.com:11445/)
+
+Originally based on [coreOllama](https://github.com/chanulee/coreOllama)
 
 ## Installation Guide
 
