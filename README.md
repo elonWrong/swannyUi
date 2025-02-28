@@ -61,7 +61,7 @@ Before you begin, ensure you have the following installed on your machine:
 
 4. **Run the Server**
 
-   start the ollama server using the following command:
+   start the ollama server using the following command in a seperate cli:
    ```
    ollama serve
    ```
