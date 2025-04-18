@@ -219,6 +219,7 @@ export async function generateResponse() {
         }
 
         const reader = response.body.getReader();
+        let buffer = '';
         fullResponse = '';
 
         while (true) {
@@ -226,7 +227,10 @@ export async function generateResponse() {
             if (done) break;
             
             const chunk = new TextDecoder().decode(value);
+            buffer += chunk;
+
             const lines = chunk.split('\n');
+            buffer = lines.pop();
             
             for (const line of lines) {
                 if (line.trim()) {
@@ -240,6 +244,18 @@ export async function generateResponse() {
                         console.error('Error parsing JSON:', e);
                     }
                 }
+            }
+        }
+
+        if (buffer.trim()) {
+            try {
+                const jsonResponse = JSON.parse(buffer);
+                if (jsonResponse.response) {
+                    fullResponse += jsonResponse.response;
+                    aiResponse.innerHTML = marked.parse(fullResponse);
+                }
+            } catch (e) {
+                console.error('Error parsing remaining JSON:', e);
             }
         }
 
