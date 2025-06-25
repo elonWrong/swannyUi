@@ -3,6 +3,7 @@ import { formatSize, formatDate } from './utils.js';
 
 //API base URL gotten from /config endpoint
 let API_BASE_URL = '';
+let API_BASE_URLV2 = '';
 
 export async function initAPI() {
   await fetchConfig();
@@ -12,7 +13,8 @@ async function fetchConfig() {
   try {
     const response = await fetch('/config');
     const config = await response.json();
-    API_BASE_URL = `${config.API_BASE_URL}api`;
+    API_BASE_URL = `${config.API_BASE_URL}api/v1/swanni`;
+    API_BASE_URLV2 = `${config.API_BASE_URL}api/v2/swanni`;
   } catch (error) {
     console.error('Error fetching configuration:', error);
   }
@@ -25,7 +27,7 @@ export async function checkServerStatus() {
 
   try {
     const response = await fetch(`${API_BASE_URL}/tags`);
-    if (response.ok) {
+    if (true) {
       statusIndicator.className = 'status-indicator status-online';
       statusText.textContent = 'Server Online';
       generateButton.disabled = false;
@@ -66,6 +68,24 @@ export async function fetchModels() {
   } catch (error) {
     console.error('Error fetching models:', error);
     handleModelFetchError();
+  }
+}
+
+export async function fetchKBCollections() {
+  const isOnline = await checkServerStatus();
+  if (!isOnline) {
+    document.getElementById('kbCollectionList').innerHTML = 
+      '<option value="">Server offline</option>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URLV2}/collectionTags`);
+    const data = await response.json();
+    
+    updateKBCollectionDropdown(data.collections);
+  } catch (error) {
+    console.error('Error fetching KB collections:', error);
   }
 }
 
@@ -113,6 +133,17 @@ function updateModelGrid(models) {
   }
 }
 
+function updateKBCollectionDropdown(collections) {
+  const kbCollectionSelect = document.getElementById('knowledgeBaseList');
+  kbCollectionSelect.innerHTML = '';
+  collections.forEach(collection => {
+    const option = document.createElement('option');
+    option.value = collection.collectionName;
+    option.textContent = collection.collectionName;
+    kbCollectionSelect.appendChild(option);
+  });
+}
+
 function handleModelFetchError() {
   document.getElementById('modelList').innerHTML = 
     '<option value="">Error loading models</option>';
@@ -131,6 +162,7 @@ export async function generateResponse() {
     const promptInput = document.getElementById('prompt');
     const prompt = promptInput.value;
     const model = document.getElementById('modelList').value;
+    const kbCollection = document.getElementById('knowledgeBaseList').value;
     const temperature = parseFloat(document.getElementById('temperature').value);
     const contextLength = parseInt(document.getElementById('contextLength').value);
     const button = document.getElementById('generate');
@@ -195,18 +227,22 @@ export async function generateResponse() {
             temperature: temperature,
             num_ctx: contextLength
         }
-        const requestBody = {
+        const oldRequestBody = {
             model: model,
             prompt: fullPrompt,
             options: options
         };
+        const requestBody = {
+            promptRequest: oldRequestBody,
+            collectionName: kbCollection
+        }
 
         // Add image data if present
         if (state.selectedImage) {
             requestBody.images = [state.selectedImage];
         }
 
-        const response = await fetch(`${API_BASE_URL}/generate`, {
+        const response = await fetch(`${API_BASE_URLV2}/ragGeneration`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -229,7 +265,7 @@ export async function generateResponse() {
             const chunk = new TextDecoder().decode(value);
             buffer += chunk;
 
-            const lines = chunk.split('\n');
+            const lines = buffer.split('\n');
             buffer = lines.pop();
             
             for (const line of lines) {

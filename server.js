@@ -11,7 +11,8 @@ const port = config.PORT;
 
 // Enable CORS
 const corsOptions = {
-  origin: config.FRONTEND_URL
+  //origin: config.FRONTEND_URL
+  origin: '*',
 }
 
 // use cors middleware

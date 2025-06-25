@@ -2,6 +2,7 @@ import { state } from '../main.js';
 
 export function setupContextManager() {
   const fullContextButton = document.getElementById('fullContextButton');
+  fullContextButton.classList.add('active');
   fullContextButton.addEventListener('click', function () {
     state.useFullContext = !state.useFullContext;
     this.classList.toggle('active', state.useFullContext);

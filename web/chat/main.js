@@ -1,5 +1,5 @@
 import { setupUI } from './modules/ui.js';
-import { initAPI, checkServerStatus, fetchModels, generateResponse } from './modules/api.js';
+import { initAPI, checkServerStatus, fetchModels, fetchKBCollections, generateResponse } from './modules/api.js';
 import { setupImageUpload, handleModelChange } from './modules/imageHandler.js';
 import { setupContextManager } from './modules/contextManager.js';
 import { initTheme } from './modules/theme.js';
@@ -7,7 +7,7 @@ import { initTheme } from './modules/theme.js';
 // Global state variables
 let serverOnline = false;
 let selectedImage = null;
-let useFullContext = false;
+let useFullContext = true;
 let selectedContextMessages = [];
 let conversationHistory = [];
 
@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   checkServerStatus();
   fetchModels();
+  fetchKBCollections();
   window.generateResponse = () => {
     checkServerStatus();
     generateResponse();

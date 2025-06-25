@@ -152,7 +152,8 @@ textarea {
 }
 
 .model-select-container,
-.temperature-container {
+.temperature-container,
+.context-select-container {
     flex: 1;
 }
 
