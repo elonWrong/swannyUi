@@ -93,12 +93,16 @@ function updateModelDropdown(models) {
   const modelSelect = document.getElementById('modelList');
   modelSelect.innerHTML = '';
   
-  models.forEach(model => {
-    const option = document.createElement('option');
-    option.value = model.name;
-    option.textContent = model.name;
-    modelSelect.appendChild(option);
-  });
+  // models.forEach(model => {
+  //   const option = document.createElement('option');
+  //   option.value = model.name;
+  //   option.textContent = model.name;
+  //   modelSelect.appendChild(option);
+  // });
+  const option = document.createElement('option');
+  option.value = "GEMMA";
+  option.textContent = "GEMMA";
+  modelSelect.appendChild(option);
 
   modelSelect.addEventListener('change', () => {
     import('./imageHandler.js').then(module => module.handleModelChange());
@@ -136,12 +140,16 @@ function updateModelGrid(models) {
 function updateKBCollectionDropdown(collections) {
   const kbCollectionSelect = document.getElementById('knowledgeBaseList');
   kbCollectionSelect.innerHTML = '';
-  collections.forEach(collection => {
-    const option = document.createElement('option');
-    option.value = collection.collectionName;
-    option.textContent = collection.collectionName;
-    kbCollectionSelect.appendChild(option);
-  });
+  // collections.forEach(collection => {
+  //   const option = document.createElement('option');
+  //   option.value = collection.collectionName;
+  //   option.textContent = collection.collectionName;
+  //   kbCollectionSelect.appendChild(option);
+  // });
+  const option = document.createElement('option');
+  option.value = "BELIMO";
+  option.textContent = "BELIMO";
+  kbCollectionSelect.appendChild(option);
 }
 
 function handleModelFetchError() {
